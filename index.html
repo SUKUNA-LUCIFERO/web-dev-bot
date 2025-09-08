@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASK XMD - Connexion WhatsApp</title>
+  <style>
+    :root {
+      --primary: #5d3fd3;
+      --secondary: #1e90ff;
+      --accent: #00bfff;
+      --light: #e6f0ff;
+      --dark: #0a1f44;
+      --green: #32CD32;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #f0f7ff, #e6f0ff);
+      color: var(--dark);
+    }
+
+    /* NAV BAR */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    nav .links {
+      display: flex;
+      gap: 12px;
+    }
+    nav a {
+      text-decoration: none;
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.95rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+    nav a:hover {
+      background: var(--light);
+    }
+
+    /* MENU TROIS POINTS */
+    .menu { position: relative; }
+    .menu-btn {
+      font-size: 1.3rem; cursor: pointer; border: none;
+      background: none; color: var(--dark);
+    }
+    .menu-list {
+      position: absolute; top: 30px; right: 0;
+      background: white; border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: none; flex-direction: column;
+      min-width: 140px; overflow: hidden;
+    }
+    .menu-list a {
+      padding: 10px; text-decoration: none; color: var(--dark);
+      font-weight: 500; font-size: 0.9rem; transition: 0.2s;
+    }
+    .menu-list a:hover { background: var(--light); color: var(--primary); }
+    .menu.open .menu-list { display: flex; }
+
+    /* CONTENU */
+    section { display: none; }
+    section.active {
+      display: block;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+      padding: 25px 20px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(93, 63, 211, 0.15);
+      border: 2px solid var(--light);
+    }
+    .logo {
+      font-size: 3.2rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text; background-clip: text;
+      color: transparent; margin-bottom: 5px;
+    }
+    h1 {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; background-clip: text;
+      color: transparent; margin: 10px 0; font-size: 2rem; font-weight: 800;
+    }
+    .subtitle { color: var(--secondary); font-weight: 600; font-size: 1.1rem; }
+    .btn-main {
+      display: block; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; text-align: center; padding: 16px; margin: 25px 0;
+      text-decoration: none; border-radius: 12px; font-weight: 700;
+      box-shadow: 0 6px 18px rgba(93, 63, 211, 0.3);
+    }
+    .card {
+      background: white; border-radius: 14px; padding: 22px;
+      margin-bottom: 22px; box-shadow: 0 6px 18px rgba(30, 144, 255, 0.1);
+      border-left: 5px solid var(--secondary);
+    }
+    h2 { color: var(--primary); font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+    footer {
+      text-align: center; margin-top: 40px; font-size: 0.9rem;
+      color: white; padding: 18px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--dark));
+    }
+
+    .social-links { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .social-link {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      color: white; text-decoration: none; padding: 12px 15px;
+      border-radius: 10px; transition: all 0.3s ease;
+      font-size: 0.95rem; font-weight: 600;
+      background: linear-gradient(135deg, var(--secondary), #4a9fff);
+      box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+    }
+    .social-link:nth-child(2n) { background: linear-gradient(135deg, var(--primary), #7a5af5); }
+    .social-link:nth-child(3n) { background: linear-gradient(135deg, var(--accent), #00d4ff); }
+    .social-link:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+
+    /* STORE */
+    .store-container {
+      max-width: 1100px; margin: 30px auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px; padding: 0 15px;
+    }
+    .bot-card {
+      background: white; border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      overflow: hidden; display: flex; flex-direction: column;
+      transition: transform 0.2s;
+    }
+    .bot-card:hover { transform: translateY(-5px); }
+    .bot-card img { width: 100%; height: 180px; object-fit: cover; }
+    .bot-card .content { padding: 15px; flex-grow: 1; }
+    .bot-card h3 { margin: 0 0 10px; color: var(--primary); }
+    .bot-card .stats { font-size: 0.85rem; color: var(--secondary); margin-bottom: 10px; }
+    .bot-card .buttons { display: flex; gap: 10px; margin-bottom: 15px; }
+    .bot-card .buttons a {
+      flex: 1; text-decoration: none; text-align: center;
+      padding: 10px; border-radius: 10px; font-weight: 600;
+      color: white; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .bot-card .buttons a.bot { background: linear-gradient(135deg,var(--primary),var(--secondary)); }
+    .bot-card .buttons a.connect { background: linear-gradient(135deg,var(--accent),var(--secondary)); }
+    .bot-card .buttons a:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+
+    /* Modal vidéo */
+    #videoModal {
+      display: none; position: fixed; z-index: 999; left: 0; top: 0;
+      width: 100%; height: 100%; background: rgba(0,0,0,0.8);
+      justify-content: center; align-items: center;
+    }
+    #videoModal video { max-width: 90%; max-height: 80%; border-radius: 12px; }
+    #closeModal {
+      position: absolute; top: 20px; right: 30px;
+      font-size: 2rem; color: white; cursor: pointer;
+    }
+
+
+
+    
+    /* === PAGE BOT NON DISPONIBLE === */
+#error {
+  display: none;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg,#f0f7ff,#e6f0ff);
+  color: var(--dark);
+  text-align: center;
+}
+
+.error-container {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  max-width: 500px;
+}
+
+#error h1 {
+  font-size: 2rem;
+  background: linear-gradient(135deg,var(--primary),var(--secondary));
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 20px;
+}
+
+#error p {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+}
+
+#error button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg,var(--primary),var(--secondary));
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#error button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+
+    
+  /* === PAGE CONNEXION === */
+
+#connect .connect-box {
+  background: white;
+  padding: 30px 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+#connect .bot-icon {
+  font-size: 60px;
+  color: var(--primary);
+  margin-bottom: 15px;
+}
+
+#connect h2 {
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+#connect form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#connect input[type="text"] {
+  padding: 14px 12px;
+  border: 2px solid var(--light);
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.3s;
+}
+
+#connect input[type="text"]:focus {
+  border-color: var(--primary);
+}
+
+#connect button {
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#connect button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(93, 63, 211, 0.3);
+}
+
+#connect .back-btn {
+  margin-top: 20px;
+  background: none;
+  border: none;
+  color: var(--secondary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#connect .back-btn:hover {
+  color: var(--primary);
+}
+
+
+
+
+    
+   
+/* FOOTER */
+.connect-footer {
+  margin-top: 30px;
+  text-align: center;
+  padding: 20px 10px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 15px;
+  color: white;
+  width: 100%;
+  max-width: 400px;
+}
+
+.connect-footer h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.social-footer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.social-footer a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.2rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: rgba(255,255,255,0.2);
+}
+
+.social-footer a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  
+  <!-- NAV BAR -->
+  <nav>
+    ASK TECH && NIDE DEV VOIR LA NAV BARE 👉
+    <div class="menu">
+      <button class="menu-btn" onclick="toggleMenu()">⋮</button>
+      <div class="menu-list">
+        <a href="#" onclick="showPage('home')">Accueil</a>
+        <a href="#" onclick="showPage('about')">À propos</a>
+        <a href="#" onclick="showPage('contact')">Contact</a>
+        <a href="#" onclick="showPage('store')">Connect-store</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ACCUEIL -->
+  <section id="home" class="active">
+    <header>
+      <div class="logo"><i class="fas fa-robot"></i></div>
+      <h1>DEV ASK TECH</h1>
+      <p class="subtitle">Sur cette plateforme vous pouvez vous connect a tout les bot crée par Dev Ask Et l'équipe Nide Dev</p>
+    </header>
+    <a href="#" onclick="showPage('store')" class="btn-main"><i class="fas fa-bolt"></i> Accede a La page de service Bot</a>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="card">
+      <h2><i class="fas fa-star" style="color: var(--accent);"></i> À propos</h2>
+      <p>Service officiel ASK XMD pour une connexion ultra-rapide et sécurisée à WhatsApp.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="card">
+      <h2><i class="fab fa-whatsapp" style="color: #25D366;"></i> Nos réseaux</h2>
+      <div class="social-links">
+        <a href="https://whatsapp.com/channel/askxmd1" class="social-link" target="_blank"><i class="fas fa-bullhorn"></i> Chaîne Officielle WhatsApp </a>
+        <a href="https://whatsapp.com/group/askxmd-support" class="social-link" target="_blank"><i class="fas fa-headset"></i> Support telegram</a>
+        <a href="https://whatsapp.com/channel/askxmd-news" class="social-link" target="_blank"><i class="fas fa-newspaper"></i> Actualités</a>
+        <a href="https://whatsapp.com/group/askxmd-community" class="social-link" target="_blank"><i class="fas fa-users"></i> Communauté</a>
+      </div>
+    </div>
+    <div class="card">
+    <h2><i class="fas fa-handshake" style="color: var(--secondary);"></i> Partenaires</h2>
+    <p>Développé par <span class="partner">Dev Ask</span> en collaboration avec <span class="partner">Nide Dev</span></p>
+  </div>
+  
+    <div class="card">
+      <h2><i class="fas fa-envelope" style="color: var(--accent);"></i> Contact</h2>
+      <p><i class="fas fa-at"></i> contact@askxmd.com</p>
+      <p><i class="fas fa-phone"></i> +241 77 47 42 64</p>
+      <p><i class="fas fa-phone"></i> +241 74 26 55 27</p>
+      <p><i class="fas fa-phone"></i> +241 77 47 42 64</p>
+    </div>
+  </section>
+
+  <!-- STORE -->
+  <section id="store">
+    <header>
+      <h1>Page Service Et connexion</h1>
+      <p>Accédez aux bots et téléchargez vos fichiers favoris</p>
+    </header>
+    <div class="store-container">
+      <!-- Bot 1 -->
+      <div class="bot-card">
+        <img src="https://files.catbox.moe/n484p7.jpg" alt="Bot 1">
+        <div class="content">
+          <h3>ASK XMD v1.14.15</h3>
+          <p>Bot officiel pour se connecter à WhatsApp via ASK XMD.</p>
+          <div class="stats">Utilisateurs aujourd'hui : <span id="users-bot1">0</span></div>
+          <div class="buttons">
+            <a href="#" class="bot" data-video="https://files.catbox.moe/TON_FICHIER_VIDEO.mp4"><i class="fas fa-robot"></i> Voir Bot</a>
+            <a href="#" onclick="showPage('connect')" class="connect"><i class="fas fa-sign-in-alt"></i> Connecter</a>
+          </div>
+        </div>
+      </div>
+      <!-- Bot 2 -->
+      <div class="bot-card">
+        <img src="https://files.catbox.moe/p81opd.jpg" alt="Bot 2">
+        <div class="content">
+          <h3>META DEATH V1</h3>
+          <p>Meta Death est un Bug Bot WhatsApp pour attaque et buguer des cibles précises (pas encore disponible 😞).</p>
+          <div class="stats">Utilisateurs aujourd'hui : <span id="users-bot2">0</span></div>
+          <div class="buttons">
+            <a href="#" class="bot" data-video="https://files.catbox.moe/TON_FICHIER_VIDEO2.mp4"><i class="fas fa-robot"></i> Voir Bot</a>
+            <a href="error.html" class="connect"><i class="fas fa-sign-in-alt"></i> Connecter</a>
+          </div>
+        </div>
+      </div>
+      <!-- Fichiers -->
+      <div class="bot-card">
+        <img src="https://catbox.moe/image.png" alt="Téléchargement">
+        <div class="content">
+          <h3>Fichiers Bot</h3>
+          <p>Téléchargez les fichiers nécessaires pour vos bots ASK XMD.</p>
+          <div class="stats">Téléchargements aujourd'hui : <span id="downloads">0</span></div>
+          <div class="buttons">
+            <a href="error.html" class="connect"><i class="fas fa-download"></i> Télécharger</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+<!-- ===== SECTION CONNEXION ===== -->
+<section id="connect" class="page">
+  <div class="container connect-box">
+    <div class="bot-icon"><i class="fas fa-robot"></i></div>
+    <h2>🔑 Connexion à ASK XMD</h2>
+
+    <form id="connectForm">
+      <input type="text" name="number" placeholder="Entre ton numéro WhatsApp" required>
+      <button type="submit"><i class="fas fa-sign-in-alt"></i> Se connecter</button>
+    </form>
+
+    <div id="result"></div>
+
+    <button onclick="showPage('home')" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Retour à l'accueil
+    </button>
+  </div>
+
+  <footer class="connect-footer">
+    <h3>ASK XMD CMD</h3>
+    <div class="social-footer">
+      <a href="#"><i class="fab fa-whatsapp"></i></a>
+      <a href="#"><i class="fab fa-github"></i></a>
+      <a href="#"><i class="fab fa-telegram-plane"></i></a>
+    </div>
+  </footer>
+</section>
+
+  <footer>
+    <p><i class="fas fa-copyright"></i> 2025 A ASK TECH | Tous droits réservés</p>
+  </footer>
+
+  <!-- Modal vidéo -->
+  <div id="videoModal">
+    <span id="closeModal">&times;</span>
+    <video id="botVideo" controls></video>
+  </div>
+
+  <script>
+    function showPage(pageId) {
+      document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
+      document.querySelector(".menu").classList.remove("open");
+    }
+    function toggleMenu() { document.querySelector(".menu").classList.toggle("open"); }
+
+    // Store.js fusionné
+    let bot1Users = 0, bot2Users = 0;
+    const modal = document.getElementById('videoModal');
+    const video = document.getElementById('botVideo');
+    const closeModal = document.getElementById('closeModal');
+
+    document.querySelectorAll('.bot-card .buttons a.bot').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        video.src = btn.dataset.video;
+        modal.style.display = 'flex';
+        video.play();
+      });
+    });
+    closeModal.onclick = () => { modal.style.display = 'none'; video.pause(); };
+
+    document.querySelectorAll('.bot-card .buttons a.connect').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const botCard = btn.closest('.bot-card');
+        if(botCard.querySelector('#users-bot1')){
+          bot1Users++; document.getElementById('users-bot1').textContent = bot1Users;
+          localStorage.setItem('bot1Users', bot1Users);
+        } else if(botCard.querySelector('#users-bot2')){
+          bot2Users++; document.getElementById('users-bot2').textContent = bot2Users;
+          localStorage.setItem('bot2Users', bot2Users);
+        }
+      });
+    });
+
+ document.addEventListener('DOMContentLoaded', () => {
+      bot1Users = parseInt(localStorage.getItem('bot1Users')) || 0;
+      bot2Users = parseInt(localStorage.getItem('bot2Users')) || 0;
+      document.getElementById('users-bot1').textContent = bot1Users;
+      document.getElementById('users-bot2').textContent = bot2Users;
+    });
+    
+    document.getElementById("connectForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      try {
+        const response = await fetch("/connect", {
+          method: "POST",
+          body: formData
+        });
+        const data = await response.json();
+        const resultDiv = document.getElementById("result");
+
+        if(data.success){
+          resultDiv.classList.remove("error");
+          resultDiv.innerHTML = `🎉 Connexion réussie !<br>Ton code : <b>${data.code}</b>`;
+        } else {
+          resultDiv.classList.add("error");
+          resultDiv.innerHTML = `❌ ${data.message}`;
+        }
+
+      } catch(err) {
+        const resultDiv = document.getElementById("result");
+        resultDiv.classList.add("error");
+        resultDiv.innerHTML = "❌ Erreur serveur. Veuillez réessayer plus tard.";
+      }
+    });
+    
+    // === SCRIPT FORMULAIRE DE CONNEXION ===
+document.addEventListener("DOMContentLoaded", () => {
+  const connectForm = document.getElementById("connectForm");
+  if (connectForm) {
+    connectForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      try {
+        const response = await fetch("/connect", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await response.json();
+        const resultDiv = document.getElementById("result");
+
+        if (data.success) {
+          resultDiv.classList.remove("error");
+          resultDiv.innerHTML = `🎉 Connexion réussie !<br>Ton code : <b>${data.code}</b>`;
+        } else {
+          resultDiv.classList.add("error");
+          resultDiv.innerHTML = `❌ ${data.message}`;
+        }
+
+      } catch (err) {
+        const resultDiv = document.getElementById("result");
+        resultDiv.classList.add("error");
+        resultDiv.innerHTML = "❌ Erreur serveur. Veuillez réessayer plus tard.";
+      }
+    });
+  }
+});
+
+  </script>
+</body>
+</html>
