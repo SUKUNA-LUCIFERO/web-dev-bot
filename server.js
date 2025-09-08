@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 // import ton module ask-pair-fire
-const startpairing = require("./base-bot/ask-pair-fire.js");
+const startpairing = require("./base-bot/connect.js");
 
 // Page d’accueil
 app.get("/", (req, res) => {
