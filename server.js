@@ -4,6 +4,10 @@ const fs = require("fs");
 const app = express();
 const path = require("path");
 
+// ⭐ MIDDLEWARES ESSENTIELS ⭐
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, makeInMemoryStore, jidDecode, downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 // import ton module ask-pair-fire
@@ -14,7 +18,9 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// Route pour connexion (depuis connect.html, bot.html, boy2.html)
+// Assurez-vous d'avoir ces imports en haut
+
+// Route POST corrigée
 app.post("/connect", async (req, res) => {
   try {
     const number = req.body.number;
@@ -27,8 +33,8 @@ app.post("/connect", async (req, res) => {
     // Lancer pairing
     await startpairing(Xreturn);
 
-    // Lire le code depuis pairing.json
-    const cu = fs.readFileSync("../system/database/pairing.json", "utf-8");
+    // Lire le code depuis pairing.json (avec gestion d'erreur)
+    const cu = await fs.readFile("../system/database/pairing.json", "utf-8");
     const cuObj = JSON.parse(cu);
 
     res.json({
@@ -38,7 +44,7 @@ app.post("/connect", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.json({ success: false, message: "Erreur lors de la connexion" });
+    res.status(500).json({ success: false, message: "Erreur lors de la connexion" });
   }
 });
 
