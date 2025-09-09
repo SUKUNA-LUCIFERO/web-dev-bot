@@ -19,12 +19,7 @@ app.get("/", (req, res) => {
 
 app.post("/connect", async (req, res) => {
   try {
-    const { number } = req.body;
     
-    if (!number) {
-      return res.status(400).json({ success: false, message: "Numéro requis" });
-    }
-
     // Nettoyer le numéro (supprimer tous les caractères non numériques incluant le +)
     const cleanedNumber = number.replace(/[^0-9]/g, '');
     
