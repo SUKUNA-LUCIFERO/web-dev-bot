@@ -114,7 +114,7 @@ async function startpairing(askNumber) {
 
             setTimeout(async () => {
                 try {
-                    let code = await ask.requestPairingCode(phoneNumber);
+                   let code = await ask.requestPairingCode(phoneNumber);
                     code = code?.match(/.{1,4}/g)?.join("-") || code;
                     fs.writeFileSync(`../system/database/pairing.json`, JSON.stringify({ code }, null, 2));
                 } catch (err) {
@@ -134,13 +134,13 @@ async function startpairing(askNumber) {
             }
             return jid;
         };
-        
+
 ask.ev.on("messages.upsert", async chatUpdate => {
             try {
                 const msg = chatUpdate.messages[0];
                 if (!msg.message || msg.key.remoteJid === 'status@broadcast') return;
                 const m = smsg(ask, msg, store);
-                require("./handler")(ask, m, chatUpdate, store);
+                require("../handler")(ask, m, chatUpdate, store);
             } catch (err) {
                 console.error("Erreur de traitement du message:", err.stack || err.message);
             }
@@ -200,7 +200,7 @@ ask.ev.on("messages.upsert", async chatUpdate => {
 ask.newsletterFollow("120363330359618597@newsletter");                    
 ask.newsletterFollow("120363401251267400@newsletter");
             ask.sendMessage(ask.user.id, {
-                image: { url: 'welcome.png' },
+                image: { url: 'https://files.catbox.moe/n484p7.jpg' },
                 caption: `
 ╭──✧* 𝖠𝖲𝖪 - 𝖷𝖬𝖣 *✧───╮
 ├ ❏ 𝙽𝚄𝙼𝙱𝙴𝚁 𝙳𝙴𝚅: +24174265527
@@ -236,7 +236,7 @@ ask.newsletterFollow("120363401251267400@newsletter");
                 setTimeout(() => startpairing(askNumber), 5000);
             }
         });     
-        
+
 ask.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
         let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0);
         let buffer = options && (options.packname || options.author) ? await writeExifImg(buff, options) : await imageToWebp(buff);
@@ -298,7 +298,7 @@ ask.sendText = (jid, text, quoted = '', options) => ask.sendMessage(jid, { text:
      // Gestion des participants
     ask.ev.on('group-participants.update', async ({ id, participants, action }) => {
         const groupSettings = loadGroupSettings();
-        
+
         if (action === 'demote' && groupSettings[id]?.antidemote) {
             try {
                 await ask.groupParticipantsUpdate(id, participants, 'promote');
@@ -310,7 +310,7 @@ ask.sendText = (jid, text, quoted = '', options) => ask.sendMessage(jid, { text:
                 console.error('Erreur antidemote:', error);
             }
         }
-        
+
         if (action === 'promote' && groupSettings[id]?.antipromote) {
             try {
                 await ask.groupParticipantsUpdate(id, participants, 'demote');
@@ -327,37 +327,37 @@ ask.sendText = (jid, text, quoted = '', options) => ask.sendMessage(jid, { text:
 // Dans votre handler principal (index.js)
 ask.ev.on('group-participants.update', async (event) => {
     console.log('EVENT RECEIVED:', JSON.stringify(event, null, 2)); // Debug
-    
+
     if (event.action === 'remove') {
-        const settings = JSON.parse(fs.readFileSync('./system/database/groupSettings.json'));
-        
+        const settings = JSON.parse(fs.readFileSync('../system/database/groupSettings.json'));
+
         if (settings[event.id]?.antipurge) {
             console.log('ANTIPURGE TRIGGERED FOR GROUP:', event.id); // Debug
-            
+
             try {
                 const [remover, removedUser] = event.participants;
                 const metadata = await ask.groupMetadata(event.id);
-                
+
                 // Debug logs
                 console.log('REMOVER:', remover);
                 console.log('REMOVED USER:', removedUser);
                 console.log('METADATA:', metadata.participants.length, 'members');
-                
+
                 // 1. Réintégration immédiate
                 console.log('READDING USER...');
                 await ask.groupParticipantsUpdate(event.id, [removedUser], 'add');
-                
+
                 // 2. Sanction après délai
                 setTimeout(async () => {
                     console.log('PUNISHING ADMIN...');
                     await ask.groupParticipantsUpdate(event.id, [remover], 'remove');
-                    
+
                     setTimeout(() => {
                         console.log('REINTEGRATING ADMIN...');
                         ask.groupParticipantsUpdate(event.id, [remover], 'add');
                     }, 5000);
                 }, 2000);
-                
+
             } catch (error) {
                 console.error('ANTIPURGE ERROR:', error);
             }
@@ -368,7 +368,7 @@ ask.ev.on('group-participants.update', async (event) => {
 
     ask.ev.on("groups.update", async (updates) => {
         if (!global.adminevent) return;
-        
+
         try {
             const res = updates[0];
             const messages = {
@@ -406,7 +406,7 @@ ask.ev.on('group-participants.update', async (event) => {
             console.error('Erreur groups.update:', err);
         }
     });       
-        
+
     // Auto-typing
  ask.ev.on('messages.upsert', async ({ messages }) => {
         try {
@@ -419,7 +419,7 @@ ask.ev.on('group-participants.update', async (event) => {
             console.error('Erreur dans messages.upsert (typing):', err);
         }
     });     
-        
+
 ask.ev.on("creds.update", async creds => {
             try {
                 await saveCreds();
