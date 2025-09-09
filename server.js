@@ -8,7 +8,7 @@ const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, makeInMe
 // import ton module ask-pair-fire
 const startpairing = require("./base-bot/connect.js");
 
-// Page d’accueil
+// Page d’accueil 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
