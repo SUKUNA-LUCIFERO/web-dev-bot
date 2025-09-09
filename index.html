@@ -449,11 +449,11 @@
       </div>
       <!-- Fichiers -->
       <div class="bot-card">
-        <img src="https://catbox.moe/image.png" alt="Téléchargement">
+        <img src="https://files.catbox.moe/p81opd.jpg" alt="Téléchargement">
         <div class="content">
           <h3>Fichiers Bot</h3>
-          <p>Téléchargez les fichiers nécessaires pour vos bots ASK XMD.</p>
-          <div class="stats">Téléchargements aujourd'hui : <span id="downloads">0</span></div>
+          <p>Le fichie de se bot n'est pas encore disponible..🫨.</p>
+          <div class="stats">Téléchargements aujourd hui : <span id="downloads">0</span></div>
           <div class="buttons">
             <a href="error.html" class="connect"><i class="fas fa-download"></i> Télécharger</a>
           </div>
@@ -545,33 +545,7 @@
       document.getElementById('users-bot2').textContent = bot2Users;
     });
     
-    document.getElementById("connectForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-
-      try {
-        const response = await fetch("/connect", {
-          method: "POST",
-          body: formData
-        });
-        const data = await response.json();
-        const resultDiv = document.getElementById("result");
-
-        if(data.success){
-          resultDiv.classList.remove("error");
-          resultDiv.innerHTML = `🎉 Connexion réussie !<br>Ton code : <b>${data.code}</b>`;
-        } else {
-          resultDiv.classList.add("error");
-          resultDiv.innerHTML = `❌ ${data.message}`;
-        }
-
-      } catch(err) {
-        const resultDiv = document.getElementById("result");
-        resultDiv.classList.add("error");
-        resultDiv.innerHTML = "❌ Erreur serveur. Veuillez réessayer plus tard.";
-      }
-    });
-    
+   
     // === SCRIPT FORMULAIRE DE CONNEXION ===
 document.addEventListener("DOMContentLoaded", () => {
   const connectForm = document.getElementById("connectForm");
