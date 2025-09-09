@@ -67,7 +67,7 @@ function loadGroupSettings() {
 }
 async function startpairing(askNumber) {
     try {
-        const sessionPath = `./sessions/${askNumber}`;
+        const sessionPath = `../sessions/${askNumber}`;
 
         if (!fs.existsSync(`${sessionPath}/creds.json`)) {
             console.warn(chalk.yellow(`[${askNumber}] Aucune session trouvée, démarrage d'une nouvelle session.`));
