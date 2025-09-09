@@ -1,0 +1,45 @@
+{
+  "120363418149930612@g.us": {
+    "antipromote": true,
+    "antidemote": true
+  },
+  "120363415820863126@g.us": {
+    "antipromote": false,
+    "antidemote": false,
+    "antipurge": true
+  },
+  "120363418488387454@g.us": {
+    "antipurge": true
+  },
+  "120363369337789551@g.us": {
+    "antipurge": false
+  },
+  "120363401874917451@g.us": {
+    "antipurge": true,
+    "whitelist": []
+  },
+  "120363401727640823@g.us": {
+    "antipurge": true,
+    "whitelist": []
+  },
+  "120363401091497966@g.us": {
+    "antipurge": true,
+    "whitelist": []
+  },
+  "120363404498828343@g.us": {
+    "antipurge": true,
+    "whitelist": []
+  },
+  "120363419148576222@g.us": {
+    "antidemote": true
+  },
+  "120363400564603451@g.us": {
+    "antipurge": true,
+    "whitelist": [],
+    "antipromote": true,
+    "antidemote": true
+  },
+  "120363418878023796@g.us": {
+    "antidemote": true
+  }
+}
