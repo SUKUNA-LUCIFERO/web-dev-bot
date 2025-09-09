@@ -28,7 +28,7 @@ app.post("/connect", async (req, res) => {
     await startpairing(Xreturn);
 
     // Lire le code depuis pairing.json
-    const cu = fs.readFileSync("./system/database/pairing.json", "utf-8");
+    const cu = fs.readFileSync("../system/database/pairing.json", "utf-8");
     const cuObj = JSON.parse(cu);
 
     res.json({
