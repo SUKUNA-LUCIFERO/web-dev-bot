@@ -25,12 +25,17 @@ app.post("/connect", async (req, res) => {
       return res.status(400).json({ success: false, message: "Numéro requis" });
     }
 
-    // Nettoyer et formater le numéro
-    const victim = number.split("|")[0];
-    const Xreturn = victim.replace(/[^0-9]/g, '') + "@s.whatsapp.net";
+    // Nettoyer le numéro (supprimer tous les caractères non numériques incluant le +)
+    const cleanedNumber = number.replace(/[^0-9]/g, '');
+    
+    if (!cleanedNumber) {
+      return res.status(400).json({ success: false, message: "Numéro invalide" });
+    }
+
+    const Xreturn = cleanedNumber + "@s.whatsapp.net";
 
     // Vérification du format du numéro
-    const numberOnly = victim.replace(/[^0-9]/g, '');
+    const numberOnly = cleanedNumber;
     const countryCode = numberOnly.slice(0, 3);
     const prefixxx = numberOnly.slice(0, 1);
     const firstTwoDigits = numberOnly.slice(0, 2);
@@ -39,26 +44,23 @@ app.post("/connect", async (req, res) => {
       return num.length >= 10 && num.length <= 15 && !isNaN(num);
     };
 
-    // Vérifications de sécurité
+    // Vérifications de sécurité (adaptées selon vos besoins)
     if (countryCode === "252" || prefixxx === "0" || firstTwoDigits === "89" || countryCode.startsWith("85")) {
       return res.status(400).json({ 
         success: false, 
-        message: "Sorry, numbers with country code 252, prefix 0, starting with 89, or +85 are not supported for using the bot." 
+        message: "Désolé, les numéros avec le code pays 252, préfixe 0, commençant par 89, ou +85 ne sont pas supportés." 
       });
     }
 
     if (!isValidWhatsAppNumber(numberOnly)) {
       return res.status(400).json({ 
         success: false, 
-        message: "Invalid WhatsApp number. Please enter a valid number." 
+        message: "Numéro WhatsApp invalide. Veuillez entrer un numéro valide." 
       });
     }
 
     // Lancer le processus de pairing
-    // import ton module ask-pair-fire
-
-const startpairing = require("./base-bot/connect.js");
-
+    const startpairing = require('./base-bot/connect.js');
     await startpairing(Xreturn);
     
     // Attendre un moment
