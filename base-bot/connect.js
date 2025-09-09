@@ -462,4 +462,7 @@ module.exports = startpairing;
 let file = require.resolve(__filename);
 fs.watchFile(file, () => {
     fs.unwatchFile(file);
-console.log(chalk.redBright('Mise à jour détectée'));
+    console.log(chalk.redBright(`Mise à jour détectée dans '${__filename}'`));
+    delete require.cache[file];
+    require(file);
+});
