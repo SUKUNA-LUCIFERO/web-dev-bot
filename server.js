@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
 
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, makeInMemoryStore, jidDecode, downloadContentFromMessage } = require('@whiskeysockets/baileys');
+
 // import ton module ask-pair-fire
 const startpairing = require("./base-bot/connect.js");
 
