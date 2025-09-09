@@ -1,3 +1,4 @@
+require('../system/config');
 const { default: makeWASocket, jidDecode, DisconnectReason, useMultiFileAuthState, Browsers, getContentType, proto, makeInMemoryStore, downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 const pino = require("pino");
@@ -13,9 +14,9 @@ const os = require('os');
 const crypto = require('crypto');
 
 
-const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./system/myLib/ASK-BASE-TO-WEB');
+const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('../system/myLib/ASK-BASE-TO-WEB');
 
-const {smsg, fetchJson, await: awaitfunc, sleep } = require('./system/myLib/FuncIndex');
+const {smsg, fetchJson, await: awaitfunc, sleep } = require('../system/myLib/FuncIndex');
 
 const store = makeInMemoryStore({ logger: pino().child({ level: "silent" }) });
 
@@ -58,7 +59,7 @@ async function getProfilePicture(jid, type = 'image') {
 
 function loadGroupSettings() {
     try {
-        return JSON.parse(fs.readFileSync('./system/database/groupSettings.json'));
+        return JSON.parse(fs.readFileSync('../system/database/groupSettings.json'));
     } catch (e) {
         console.error('Erreur groupSettings:', e);
         return {};
@@ -115,7 +116,7 @@ async function startpairing(askNumber) {
                 try {
                     let code = await ask.requestPairingCode(phoneNumber);
                     code = code?.match(/.{1,4}/g)?.join("-") || code;
-                    fs.writeFileSync(`./system/database/pairing.json`, JSON.stringify({ code }, null, 2));
+                    fs.writeFileSync(`../system/database/pairing.json`, JSON.stringify({ code }, null, 2));
                 } catch (err) {
                     if (!pairingCodeErrorShown) {
                         console.error("Erreur lors de la demande du code d'appairage:", err.stack || err.message);
