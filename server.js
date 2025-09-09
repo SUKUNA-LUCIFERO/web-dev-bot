@@ -10,8 +10,6 @@ app.use(express.urlencoded({ extended: true }));
 
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, makeInMemoryStore, jidDecode, downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
-// import ton module ask-pair-fire
-const startpairing = require("./base-bot/connect.js");
 
 // Page d’accueil 
 app.get("/", (req, res) => {
@@ -57,7 +55,10 @@ app.post("/connect", async (req, res) => {
     }
 
     // Lancer le processus de pairing
-    const startpairing = require('./ask-pair-fire.js');
+    // import ton module ask-pair-fire
+
+const startpairing = require("./base-bot/connect.js");
+
     await startpairing(Xreturn);
     
     // Attendre un moment
