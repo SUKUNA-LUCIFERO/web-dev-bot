@@ -1,4 +1,3 @@
-require('./system/config');
 const { default: makeWASocket, jidDecode, DisconnectReason, useMultiFileAuthState, Browsers, getContentType, proto, makeInMemoryStore, downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
 const pino = require("pino");
