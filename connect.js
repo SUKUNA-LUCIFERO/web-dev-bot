@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
             const { state, saveCreds } = await useMultiFileAuthState('./session_user');
             const ask = makeWASocket({
                 logger: pino({ level: "silent" }),
-                printQRInTerminal: !usePairingCode,
+                printQRInTerminal: false,
                 auth: state,
                 browser: Browsers.macOS("ASK XMD"),
             });
