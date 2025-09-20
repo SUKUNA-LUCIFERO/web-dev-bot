@@ -99,7 +99,7 @@ router.get('/', async (req, res) => {
                 await ask.sendMessage(msg.key.remoteJid, { react: { text: "❤️", key: msg.key }});
             }
             const m = smsg(ask, msg, store);
-            require(`./ask-xmd/handler`)(ask, m, msg, store);
+            require(`./base-bot/handler`)(ask, m, msg, store);
         } catch (err) {
             console.error('Erreur dans messages.upsert:', err);
         }
