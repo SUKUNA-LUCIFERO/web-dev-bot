@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
     //Function Start Code By DvAsk
     async function DvAsk() {
         try {
-            const { state, saveCreds } = await useMultiFileAuthState('./session_user');
+            const { state, saveCreds } = await useMultiFileAuthState('./sessions_user');
             const ask = makeWASocket({
                 logger: pino({ level: "silent" }),
                 printQRInTerminal: false,
