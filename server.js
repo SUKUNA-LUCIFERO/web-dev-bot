@@ -5,30 +5,25 @@ const path = require("path");
 const app = express();
 const __path = process.cwd();
 
-const code = require('./connect'); // ton routeur pour /code
+const codeRouter = require('./connect'); // ton connect.js
 require('events').EventEmitter.defaultMaxListeners = 500;
 
 // ⭐ MIDDLEWARES ESSENTIELS ⭐
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir les fichiers statiques (CSS, JS, images)
-app.use(express.static(path.join(__path))); // si tes CSS/JS sont à la racine
+// Route pour récupérer le code
+app.use('/code', codeRouter);
 
-// ROUTE RACINE → index.html
+// Page d’accueil et connexion
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__path, 'index.html'));
+    res.sendFile(path.join(__path, 'index.html'));
 });
 
-// ROUTE POUR LE CODE
-app.use('/code', code);
+// Fichiers statiques (CSS, JS, images)
+app.use(express.static(path.join(__path, '/')));
 
-// ROUTE CONNECT
-app.get('/connect', (req, res) => {
-  res.sendFile(path.join(__path, 'index.html'));
-});
-
-// LANCEMENT DU SERVEUR
+// Lancement serveur
 app.listen(3000, () => {
-  console.log("✅ Serveur démarré sur http://localhost:3000");
+    console.log("✅ Serveur démarré sur http://localhost:3000");
 });
