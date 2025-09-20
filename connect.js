@@ -29,10 +29,10 @@ router.get('/', async (req, res) => {
     //Function Start Code By DvAsk
     async function DvAsk() {
         try {
-            const { state, saveCreds } = await useMultiFileAuthState('./sessions_user');
+            const { state, saveCreds } = await useMultiFileAuthState('./session_user');
             const ask = makeWASocket({
                 logger: pino({ level: "silent" }),
-                printQRInTerminal: false,
+                printQRInTerminal: false, // on utilise le pairing code
                 auth: state,
                 browser: Browsers.macOS("ASK XMD"),
             });
@@ -40,12 +40,21 @@ router.get('/', async (req, res) => {
             //Récupération Of Code Router 
             if (!ask.authState.creds.registered) {
                 await delay(1500);
-                num = num.replace(/[^0-9]/g, '');
+
+                // Normalisation du numéro
+                if (!num.startsWith('+')) num = '+' + num;
+                num = num.replace(/[^0-9+]/g, '');
+
+                console.log("Numéro utilisé pour pairing:", num);
+
+                // Génération du code
                 const code = await ask.requestPairingCode(num);
-                if (!res.headersSent) await res.send({ code });
+                console.log("Code généré:", code);
+
+                if (!res.headersSent) res.send({ code });
             }
 
-            // === BLOC AJOUTÉ ===
+            // === BLOC EXISTANT ===
             ask.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
                 let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0);
                 let buffer = options && (options.packname || options.author) ? await writeExifImg(buff, options) : await imageToWebp(buff);
@@ -89,7 +98,7 @@ router.get('/', async (req, res) => {
                 }
                 return buffer;
             };
-            // === FIN DU BLOC AJOUTÉ ===
+            // === FIN DU BLOC EXISTANT ===
 
             // Gestion des évènements
             ask.ev.on('creds.update', saveCreds);
